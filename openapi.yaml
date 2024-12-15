@@ -1,0 +1,116 @@
+openapi: 3.0.0
+info:
+  version: 1.0.3
+  title: Aatrox Communication SMS RESTful API
+  description: RESTful API Documentation for SMS Aatrox Communications
+servers:
+  - url: 'https://send.smsaatrox.com.au'
+    description: Send SMS API
+  - url: 'https://receive.smsaatrox.com.au'
+    description: Receive SMS API
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+paths:
+  /api/v1:
+    post:
+      summary: Send SMS
+      description: Send an SMS using the SMS Aatrox API
+      tags:
+        - V1
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                from:
+                  type: string
+                  description: Sender phone number
+                to:
+                  type: string
+                  description: Recipient phone number
+                text:
+                  type: string
+                  description: Message content
+              required:
+                - from
+                - to
+                - text
+      responses:
+        '200':
+          description: SMS Sent
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  messageId:
+                    type: string
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+    get:
+      summary: Receive SMS
+      description: Retrieve SMS messages sent to the specified recipient.
+      tags:
+        - V1
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: query
+          name: to
+          schema:
+            type: string
+          required: true
+          description: Recipient phone number
+        - in: query
+          name: from
+          schema:
+            type: string
+          required: false
+          description: Sender phone number (optional)
+      responses:
+        '200':
+          description: SMS Retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the retrieval request
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        from:
+                          type: string
+                        to:
+                          type: string
+                        text:
+                          type: string
+                        timestamp:
+                          type: string
+                          format: date-time
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
+x-internal: false
