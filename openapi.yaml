@@ -242,9 +242,6 @@ paths:
                   from_addr:
                     type: string
                     description: Sender phone number
-                  unicode:
-                    type: boolean
-                    description: Indicates if unicode was used
                   created_at:
                     type: string
                     format: date-time
