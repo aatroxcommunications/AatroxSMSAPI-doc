@@ -213,3 +213,55 @@ paths:
           description: Unauthorized
         '500':
           description: Internal Server Error
+  /api/v2/sms/{id}:
+    get:
+      summary: Retrieve SMS Details (V2)
+      description: Retrieve detailed information about a specific SMS message by its ID.
+      tags:
+        - V2
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The message ID to retrieve details for
+          schema:
+            type: string
+      responses:
+        '200':
+          description: SMS Details Retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  to_addr:
+                    type: string
+                    description: Recipient phone number
+                  from_addr:
+                    type: string
+                    description: Sender phone number
+                  unicode:
+                    type: boolean
+                    description: Indicates if unicode was used
+                  created_at:
+                    type: string
+                    format: date-time
+                    description: Time when the message was created
+                  status:
+                    type: string
+                    description: Delivery status of the message
+                  status_at:
+                    type: string
+                    format: date-time
+                    description: Time when the status was recorded
+                  segment_count:
+                    type: integer
+                    description: Number of SMS segments used
+        '400':
+          description: Bad Request
+        '401':
+          description: Unauthorized
+        '500':
+          description: Internal Server Error
