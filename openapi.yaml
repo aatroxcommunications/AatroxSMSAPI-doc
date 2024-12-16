@@ -5,9 +5,11 @@ info:
   description: RESTful API Documentation for SMS Aatrox Communications
 servers:
   - url: 'https://send.smsaatrox.com.au'
-    description: Send SMS API
+    description: Send SMS API V1
   - url: 'https://receive.smsaatrox.com.au'
-    description: Receive SMS API
+    description: Receive SMS API V1
+  - url: 'https://api.smsaatrox.com.au'
+    description: V2 API
 components:
   securitySchemes:
     BearerAuth:
