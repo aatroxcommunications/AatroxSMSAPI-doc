@@ -1,6 +1,6 @@
 openapi: 3.0.0
 info:
-  version: 1.0.4
+  version: 1.0.3
   title: Aatrox Communication SMS RESTful API
   description: RESTful API Documentation for SMS Aatrox Communications
 servers:
@@ -15,124 +15,9 @@ components:
     BearerAuth:
       type: http
       scheme: bearer
-  schemas:
-    SmsSendRequest:
-      type: object
-      properties:
-        from:
-          type: string
-          description: Sender phone number in E.164 format (e.g., "+61480013822")
-        to:
-          type: string
-          description: Recipient phone number in E.164 format (e.g., "+61412345678")
-        text:
-          type: string
-          description: Message content
-      required:
-        - from
-        - to
-        - text
-    SmsSendResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          description: Status of the SMS sending request (e.g., "success")
-        message:
-          type: string
-          description: Description message
-        messageId:
-          type: string
-          description: Unique identifier for the sent message
-    SmsReceiveResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          description: Status of the retrieval request (e.g., "success")
-        messages:
-          type: array
-          items:
-            type: object
-            properties:
-              from:
-                type: string
-                description: Sender phone number
-              to:
-                type: string
-                description: Recipient phone number
-              text:
-                type: string
-                description: Message content
-              timestamp:
-                type: string
-                format: date-time
-                description: Time when the message was received
-    SmsDetailResponse:
-      type: object
-      properties:
-        to_addr:
-          type: string
-          description: Recipient phone number
-        from_addr:
-          type: string
-          description: Sender phone number
-        unicode:
-          type: boolean
-          description: Indicates if Unicode was used
-        created_at:
-          type: string
-          format: date-time
-          description: Time when the message was created
-        status:
-          type: string
-          description: Delivery status of the message
-        status_at:
-          type: string
-          format: date-time
-          description: Time when the status was recorded
-        segment_count:
-          type: integer
-          description: Number of SMS segments used
-    MessageInfo:
-      type: object
-      properties:
-        messageid:
-          type: string
-          description: Unique message ID
-        date:
-          type: string
-          description: Date the message was sent (e.g., "17/12/2024")
-        time:
-          type: string
-          description: Time the message was sent, including timezone (e.g., "11:03 am (AEDT)")
-    OtpGenerateRequest:
-      type: object
-      properties:
-        phone:
-          type: string
-          description: Recipient phone number in E.164 format (e.g., "+61412345678")
-      required:
-        - phone
-    OtpGenerateResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          description: Status of the OTP generation request (e.g., "success")
-        message:
-          type: string
-          description: Description message
-    OtpVerifyResponse:
-      type: object
-      properties:
-        status:
-          type: string
-          description: Status of the OTP verification (e.g., "success" or "failure")
-        message:
-          type: string
-          description: Description message
-
+    BasicAuth:
+      type: http
+      scheme: basic
 paths:
   /api/v1:
     post:
@@ -147,21 +32,41 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SmsSendRequest'
+              type: object
+              properties:
+                from:
+                  type: string
+                  description: Sender phone number
+                to:
+                  type: string
+                  description: Recipient phone number
+                text:
+                  type: string
+                  description: Message content
+              required:
+                - from
+                - to
+                - text
       responses:
         '200':
           description: SMS Sent
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SmsSendResponse'
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  messageId:
+                    type: string
         '400':
           description: Bad Request
         '401':
           description: Unauthorized
         '500':
           description: Internal Server Error
-
   /api/v2/sms/send:
     post:
       summary: Send SMS (V2)
@@ -175,21 +80,41 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/SmsSendRequest'
+              type: object
+              properties:
+                from:
+                  type: string
+                  description: Sender phone number
+                to:
+                  type: string
+                  description: Recipient phone number
+                text:
+                  type: string
+                  description: Message content
+              required:
+                - from
+                - to
+                - text
       responses:
         '200':
           description: SMS Sent
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SmsSendResponse'
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+                  messageId:
+                    type: string
         '400':
           description: Bad Request
         '401':
           description: Unauthorized
         '500':
           description: Internal Server Error
-
   /api/v2/sms/receive:
     get:
       summary: Receive SMS (V2)
@@ -204,27 +129,44 @@ paths:
           schema:
             type: string
           required: true
-          description: Recipient phone number in E.164 format
+          description: Recipient phone number
         - in: query
           name: from
           schema:
             type: string
           required: false
-          description: Sender phone number in E.164 format (optional)
+          description: Sender phone number (optional)
       responses:
         '200':
           description: SMS Retrieved
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SmsReceiveResponse'
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the retrieval request
+                  messages:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        from:
+                          type: string
+                        to:
+                          type: string
+                        text:
+                          type: string
+                        timestamp:
+                          type: string
+                          format: date-time
         '400':
           description: Bad Request
         '401':
           description: Unauthorized
         '500':
           description: Internal Server Error
-
   /api/v2/sms/{id}:
     get:
       summary: Retrieve SMS Details (V2)
@@ -246,14 +188,37 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/SmsDetailResponse'
+                type: object
+                properties:
+                  to_addr:
+                    type: string
+                    description: Recipient phone number
+                  from_addr:
+                    type: string
+                    description: Sender phone number
+                  unicode:
+                    type: boolean
+                    description: Indicates if unicode was used
+                  created_at:
+                    type: string
+                    format: date-time
+                    description: Time when the message was created
+                  status:
+                    type: string
+                    description: Delivery status of the message
+                  status_at:
+                    type: string
+                    format: date-time
+                    description: Time when the status was recorded
+                  segment_count:
+                    type: integer
+                    description: Number of SMS segments used
         '400':
           description: Bad Request
         '401':
           description: Unauthorized
         '500':
           description: Internal Server Error
-
   /api/v2/sms/info/{number}:
     get:
       summary: Retrieve Message IDs and Timestamps (V2)
@@ -270,7 +235,7 @@ paths:
         - in: path
           name: number
           required: true
-          description: The phone number to retrieve message IDs for in E.164 format
+          description: The phone number to retrieve message IDs for
           schema:
             type: string
       responses:
@@ -281,77 +246,77 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/MessageInfo'
+                  type: object
+                  properties:
+                    messageid:
+                      type: string
+                      description: Unique message ID
+                    date:
+                      type: string
+                      description: Date the message was sent (e.g., "17/12/2024")
+                    time:
+                      type: string
+                      description: Time the message was sent, including timezone (e.g., "11:03 am (AEDT)")
         '400':
           description: Bad Request
         '401':
           description: Unauthorized
         '500':
           description: Internal Server Error
-
-  /api/v2/otp/generate:
+  /api/v2/makecall:
     post:
-      summary: Generate OTP
-      description: Generate and send a One-Time Password (OTP) to a specified phone number.
+      summary: Initiate a Call (Make Call API)
+      description: >
+        Initiate a phone call using the 3CX API.
+        **Authentication:** This endpoint uses Basic Authentication and requires a valid API username and password from 3CX.
+        **Required Fields:** The request body must include the FQDN (Fully Qualified Domain Name) and EXT (Extension) for the call.
       tags:
-        - OTP
+        - V2
       security:
-        - BearerAuth: [] # Optional: Remove if OTP generation does not require client authentication
+        - BasicAuth: []
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/OtpGenerateRequest'
+              type: object
+              properties:
+                reason:
+                  type: string
+                  description: Reason for the call initiation.
+                destination:
+                  type: string
+                  description: Destination phone number to call.
+                FQDN:
+                  type: string
+                  description: Fully Qualified Domain Name for the 3CX API.
+                EXT:
+                  type: string
+                  description: Extension number for the call.
+                timeout:
+                  type: integer
+                  description: Timeout duration in seconds.
+              required:
+                - reason
+                - destination
+                - FQDN
+                - EXT
+                - timeout
       responses:
         '200':
-          description: OTP Generated and Sent
+          description: Call Initiated Successfully
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/OtpGenerateResponse'
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
         '400':
-          description: Bad Request
+          description: Bad Request - Missing or invalid parameters.
         '401':
-          description: Unauthorized
-        '502':
-          description: Failed to send OTP SMS
-        '500':
-          description: Internal Server Error
-
-  /api/v2/otp/verify:
-    get:
-      summary: Verify OTP
-      description: Verify the One-Time Password (OTP) provided by the user.
-      tags:
-        - OTP
-      security:
-        - BearerAuth: [] # Optional: Remove if OTP verification does not require client authentication
-      parameters:
-        - in: query
-          name: phone
-          required: true
-          description: Phone number in E.164 format associated with the OTP
-          schema:
-            type: string
-        - in: query
-          name: otp
-          required: true
-          description: The OTP code to verify
-          schema:
-            type: string
-      responses:
-        '200':
-          description: OTP Verified Successfully
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/OtpVerifyResponse'
-        '400':
-          description: Bad Request
-        '401':
-          description: Unauthorized
-        '404':
-          description: OTP Not Found
+          description: Unauthorized - Invalid API credentials.
         '500':
           description: Internal Server Error
