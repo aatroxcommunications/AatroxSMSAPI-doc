@@ -163,6 +163,86 @@ paths:
           description: Unauthorized.
         '500':
           description: Internal Server Error.
+  /api/v2/sms/send/Enablecontent:
+    post:
+      summary: Enable Request-Body Storage
+      description: >
+        Enable storing the SMS request body (specifically the text content) in the database for the sender's phone number.
+        Once enabled, any SMS sent using the /api/v2/sms/send or /api/v2/sms/send/disclaimer endpoints will have their text stored.
+      tags:
+        - V2
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                from:
+                  type: string
+                  description: Sender phone number to enable content storage for.
+              required:
+                - from
+      responses:
+        '200':
+          description: Request-Body Storage Enabled.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+        '400':
+          description: Bad Request.
+        '401':
+          description: Unauthorized.
+        '500':
+          description: Internal Server Error.
+  /api/v2/sms/send/DisableContent:
+    post:
+      summary: Disable Request-Body Storage
+      description: >
+        Disable storing the SMS request body for the sender's phone number.
+        Once disabled, SMS requests will no longer be stored in the database.
+      tags:
+        - V2
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                from:
+                  type: string
+                  description: Sender phone number to disable content storage for.
+              required:
+                - from
+      responses:
+        '200':
+          description: Request-Body Storage Disabled.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  message:
+                    type: string
+        '400':
+          description: Bad Request.
+        '401':
+          description: Unauthorized.
+        '500':
+          description: Internal Server Error.
   /api/v2/sms/receive:
     get:
       summary: Receive SMS (V2)
