@@ -2,14 +2,15 @@ openapi: 3.0.0
 info:
   version: 1.0.3
   title: Aatrox Communication SMS RESTful API
-  description: RESTful API Documentation for SMS Aatrox Communications
+  description: >
+    Welcome to the Aatrox Communication SMS API! This API makes it simple and secure to send text messages, verify one-time passwords, and even initiate calls—all from a single platform. Whether you're using our legacy version or our improved V2 endpoints, you'll find clear instructions and easy-to-follow steps to integrate SMS and call functionality into your applications.
 servers:
   - url: 'https://send.smsaatrox.com.au'
-    description: Send SMS API V1
+    description: Send SMS API V1 – Simple and straightforward SMS sending.
   - url: 'https://receive.smsaatrox.com.au'
-    description: Receive SMS API V1
+    description: Receive SMS API V1 – Easily get incoming messages.
   - url: 'https://api.smsaatrox.com.au'
-    description: API V2
+    description: API V2 – Enhanced features with extra flexibility and control.
 components:
   securitySchemes:
     BearerAuth:
@@ -21,8 +22,9 @@ components:
 paths:
   /api/v1:
     post:
-      summary: Send SMS
-      description: Send an SMS using the SMS Aatrox API.
+      summary: Send SMS (V1)
+      description: >
+        Send a text message quickly and easily using our V1 SMS service. Provide the sender and recipient phone numbers along with your message, and we'll take care of the rest.
       tags:
         - V1
       security:
@@ -36,20 +38,20 @@ paths:
               properties:
                 from:
                   type: string
-                  description: Sender phone number.
+                  description: The phone number sending the message.
                 to:
                   type: string
-                  description: Recipient phone number.
+                  description: The recipient's phone number.
                 text:
                   type: string
-                  description: Message content.
+                  description: The message content you wish to send.
               required:
                 - from
                 - to
                 - text
       responses:
         '200':
-          description: SMS Sent.
+          description: Your SMS was sent successfully.
           content:
             application/json:
               schema:
@@ -57,20 +59,24 @@ paths:
                 properties:
                   status:
                     type: string
+                    description: The current status of your SMS request.
                   message:
                     type: string
+                    description: A message confirming the SMS action.
                   messageId:
                     type: string
+                    description: A unique identifier for the SMS.
         '400':
-          description: Bad Request.
+          description: We could not process your request due to invalid input.
         '401':
-          description: Unauthorized.
+          description: Your authentication failed. Please check your credentials.
         '500':
-          description: Internal Server Error.
+          description: Oops! Something went wrong on our end.
   /api/v2/sms/send:
     post:
       summary: Send SMS (V2)
-      description: Send an SMS using the V2 SMS Aatrox API.
+      description: >
+        Enjoy a more robust and enhanced SMS sending experience with our V2 service. Just provide the sender, recipient, and message content, and we’ll deliver your text reliably.
       tags:
         - V2
       security:
@@ -84,20 +90,20 @@ paths:
               properties:
                 from:
                   type: string
-                  description: Sender phone number.
+                  description: Your phone number, which appears as the sender.
                 to:
                   type: string
-                  description: Recipient phone number.
+                  description: The recipient's phone number.
                 text:
                   type: string
-                  description: Message content.
+                  description: The message you want to send.
               required:
                 - from
                 - to
                 - text
       responses:
         '200':
-          description: SMS Sent.
+          description: Your SMS was sent successfully.
           content:
             application/json:
               schema:
@@ -105,22 +111,24 @@ paths:
                 properties:
                   status:
                     type: string
+                    description: The status of your SMS request.
                   message:
                     type: string
+                    description: A confirmation message.
                   messageId:
                     type: string
+                    description: The unique ID for your sent message.
         '400':
-          description: Bad Request.
+          description: There was a problem with your request. Please check your input.
         '401':
-          description: Unauthorized.
+          description: Your authentication is not valid. Please try again.
         '500':
-          description: Internal Server Error.
+          description: An error occurred on our server.
   /api/v2/sms/send/disclaimer:
     post:
-      summary: Send SMS with Disclaimer
+      summary: Send SMS with Disclaimer (V2)
       description: >
-        Send an SMS that includes a disclaimer. The disclaimer text is retrieved from a key-value store
-        based on the sender's phone number and appended to the SMS message.
+        Send your text message along with an automatically appended disclaimer. We fetch the appropriate disclaimer based on the sender’s phone number and attach it to your message before sending.
       tags:
         - V2
       security:
@@ -134,20 +142,20 @@ paths:
               properties:
                 from:
                   type: string
-                  description: Sender phone number.
+                  description: The sender's phone number.
                 to:
                   type: string
-                  description: Recipient phone number.
+                  description: The recipient's phone number.
                 text:
                   type: string
-                  description: Message content before the disclaimer is appended.
+                  description: The main content of your message (the disclaimer will be added automatically).
               required:
                 - from
                 - to
                 - text
       responses:
         '200':
-          description: SMS Sent with Disclaimer.
+          description: Your SMS with the disclaimer has been sent successfully.
           content:
             application/json:
               schema:
@@ -155,20 +163,21 @@ paths:
                 properties:
                   status:
                     type: string
+                    description: The current status of your SMS request.
                   message:
                     type: string
+                    description: A confirmation message.
         '400':
-          description: Bad Request.
+          description: We could not process your request. Please verify your input.
         '401':
-          description: Unauthorized.
+          description: Authentication failed. Please check your credentials.
         '500':
-          description: Internal Server Error.
+          description: An unexpected error occurred on our end.
   /api/v2/sms/send/Enablecontent:
     post:
-      summary: Enable Request-Body Storage
+      summary: Enable Request-Body Storage (V2)
       description: >
-        Enable storing the SMS request body (specifically the text content) in the database for the sender's phone number.
-        Once enabled, any SMS sent using the /api/v2/sms/send or /api/v2/sms/send/disclaimer endpoints will have their text stored.
+        Enable the feature to store the content of your text messages. Once enabled for your phone number, every SMS sent via our V2 endpoints will have its text securely stored in our database.
       tags:
         - V2
       security:
@@ -182,12 +191,12 @@ paths:
               properties:
                 from:
                   type: string
-                  description: Sender phone number to enable content storage for.
+                  description: The phone number for which you want to enable message storage.
               required:
                 - from
       responses:
         '200':
-          description: Request-Body Storage Enabled.
+          description: Message storage has been enabled for your account.
           content:
             application/json:
               schema:
@@ -195,20 +204,21 @@ paths:
                 properties:
                   status:
                     type: string
+                    description: The current status of your request.
                   message:
                     type: string
+                    description: A confirmation that storage has been enabled.
         '400':
-          description: Bad Request.
+          description: Your request was invalid. Please check your input.
         '401':
-          description: Unauthorized.
+          description: You are not authorized to perform this action.
         '500':
-          description: Internal Server Error.
+          description: A server error occurred. Please try again later.
   /api/v2/sms/send/DisableContent:
     post:
-      summary: Disable Request-Body Storage
+      summary: Disable Request-Body Storage (V2)
       description: >
-        Disable storing the SMS request body for the sender's phone number.
-        Once disabled, SMS requests will no longer be stored in the database.
+        Disable the storage of your text message content. After disabling, messages sent from your phone number will no longer be stored in our database.
       tags:
         - V2
       security:
@@ -222,12 +232,12 @@ paths:
               properties:
                 from:
                   type: string
-                  description: Sender phone number to disable content storage for.
+                  description: The phone number for which you want to disable message storage.
               required:
                 - from
       responses:
         '200':
-          description: Request-Body Storage Disabled.
+          description: Message storage has been disabled for your account.
           content:
             application/json:
               schema:
@@ -235,20 +245,21 @@ paths:
                 properties:
                   status:
                     type: string
+                    description: The current status of your request.
                   message:
                     type: string
+                    description: A confirmation that storage has been disabled.
         '400':
-          description: Bad Request.
+          description: We could not process your request. Please check your input.
         '401':
-          description: Unauthorized.
+          description: Your authentication failed. Please verify your credentials.
         '500':
-          description: Internal Server Error.
+          description: An error occurred on our server.
   /api/v2/sms/send/exportcsv:
     post:
-      summary: Export Stored SMS Content as Excel (XML)
+      summary: Export Stored SMS Content as Excel (XML) (V2)
       description: >
-        Export stored SMS content from the database as an Excel (SpreadsheetML) file and email it via SMTP2GO.
-        The request requires the sender's phone number (with content storage enabled) and a recipient email address.
+        Export all stored SMS content as an Excel file (in SpreadsheetML format). Provide your phone number (with storage enabled) and the email address where you want the export to be sent. We'll handle the file creation and emailing process for you.
       tags:
         - V2
       security:
@@ -262,16 +273,16 @@ paths:
               properties:
                 from:
                   type: string
-                  description: Sender phone number for which content storage is enabled.
+                  description: Your phone number (with content storage enabled).
                 email:
                   type: string
-                  description: Recipient email address to send the Excel export.
+                  description: The email address where the Excel export should be sent.
               required:
                 - from
                 - email
       responses:
         '200':
-          description: Excel export email sent successfully.
+          description: The export was successful and the Excel file has been emailed to you.
           content:
             application/json:
               schema:
@@ -279,18 +290,21 @@ paths:
                 properties:
                   status:
                     type: string
+                    description: The current status of your export request.
                   message:
                     type: string
+                    description: A confirmation message.
         '400':
-          description: Bad Request.
+          description: There was an issue with your request. Please verify the information provided.
         '401':
-          description: Unauthorized.
+          description: You are not authorized to perform this action.
         '500':
-          description: Internal Server Error.
+          description: An unexpected error occurred on our server.
   /api/v2/sms/receive:
     get:
       summary: Receive SMS (V2)
-      description: Retrieve SMS messages sent to the specified recipient using V2.
+      description: >
+        Retrieve incoming text messages for the specified recipient. Use your phone number to quickly check all messages sent to you, and optionally filter by sender.
       tags:
         - V2
       security:
@@ -301,16 +315,16 @@ paths:
           schema:
             type: string
           required: true
-          description: Recipient phone number.
+          description: The recipient's phone number.
         - in: query
           name: from
           schema:
             type: string
           required: false
-          description: Sender phone number (optional).
+          description: (Optional) The sender's phone number to filter messages.
       responses:
         '200':
-          description: SMS Retrieved.
+          description: Your messages have been retrieved successfully.
           content:
             application/json:
               schema:
@@ -318,7 +332,7 @@ paths:
                 properties:
                   status:
                     type: string
-                    description: Status of the retrieval request.
+                    description: The status of your retrieval request.
                   messages:
                     type: array
                     items:
@@ -326,23 +340,28 @@ paths:
                       properties:
                         from:
                           type: string
+                          description: The sender's phone number.
                         to:
                           type: string
+                          description: Your phone number.
                         text:
                           type: string
+                          description: The message content.
                         timestamp:
                           type: string
                           format: date-time
+                          description: The date and time when the message was received.
         '400':
-          description: Bad Request.
+          description: There was a problem with your request parameters.
         '401':
-          description: Unauthorized.
+          description: Your authentication is not valid.
         '500':
-          description: Internal Server Error.
+          description: An error occurred on our server.
   /api/v2/sms/{id}:
     get:
       summary: Retrieve SMS Details (V2)
-      description: Retrieve detailed information about a specific SMS message by its ID.
+      description: >
+        Get detailed information about a specific text message by using its unique message ID. This helps you track delivery details and timing.
       tags:
         - V2
       security:
@@ -351,12 +370,12 @@ paths:
         - in: path
           name: id
           required: true
-          description: The message ID to retrieve details for.
+          description: The unique message ID for which you want to see the details.
           schema:
             type: string
       responses:
         '200':
-          description: SMS Details Retrieved.
+          description: Details for your requested message have been successfully retrieved.
           content:
             application/json:
               schema:
@@ -364,38 +383,38 @@ paths:
                 properties:
                   to_addr:
                     type: string
-                    description: Recipient phone number.
+                    description: The recipient's phone number.
                   from_addr:
                     type: string
-                    description: Sender phone number.
+                    description: The sender's phone number.
                   unicode:
                     type: boolean
-                    description: Indicates if unicode was used.
+                    description: Indicates if the message used Unicode characters.
                   created_at:
                     type: string
                     format: date-time
-                    description: Time when the message was created.
+                    description: The time when the message was created.
                   status:
                     type: string
-                    description: Delivery status of the message.
+                    description: The current delivery status of the message.
                   status_at:
                     type: string
                     format: date-time
-                    description: Time when the status was recorded.
+                    description: The time when the status was last updated.
                   segment_count:
                     type: integer
-                    description: Number of SMS segments used.
+                    description: The number of SMS segments used.
         '400':
-          description: Bad Request.
+          description: There was a problem with your request. Please verify the message ID.
         '401':
-          description: Unauthorized.
+          description: Your authentication is not valid.
         '500':
-          description: Internal Server Error.
+          description: An error occurred while retrieving the message details.
   /api/v2/sms/info/{number}:
     get:
       summary: Retrieve Message IDs and Timestamps (V2)
       description: |
-        Retrieve all stored message IDs along with the corresponding date and time when the messages were sent for a specific phone number.
+        Retrieve a list of all your sent message IDs along with the date and time they were sent. Simply provide your phone number, and we'll return the details in a clear, organized list.
       tags:
         - V2
       security:
@@ -404,12 +423,12 @@ paths:
         - in: path
           name: number
           required: true
-          description: The phone number to retrieve message IDs for.
+          description: Your phone number for which you want the message history.
           schema:
             type: string
       responses:
         '200':
-          description: List of Message IDs with Dates and Times.
+          description: The list of message IDs, dates, and times has been successfully retrieved.
           content:
             application/json:
               schema:
@@ -419,23 +438,24 @@ paths:
                   properties:
                     messageid:
                       type: string
-                      description: Unique message ID.
+                      description: The unique ID of the message.
                     date:
                       type: string
-                      description: Date the message was sent (e.g., "17/12/2024").
+                      description: The date when the message was sent (e.g., "17/12/2024").
                     time:
                       type: string
-                      description: Time the message was sent, including timezone (e.g., "11:03 am (AEDT)").
+                      description: The time when the message was sent, including the timezone (e.g., "11:03 am (AEDT)").
         '400':
-          description: Bad Request.
+          description: Your request parameters appear to be incorrect.
         '401':
-          description: Unauthorized.
+          description: You are not authorized to access this information.
         '500':
-          description: Internal Server Error.
+          description: An error occurred while retrieving your message history.
   /api/v2/otp/generate:
     post:
       summary: Generate OTP (V2)
-      description: Generate a one-time password (OTP) and send it via SMS.
+      description: >
+        Quickly generate a one-time password (OTP) and have it sent directly to your phone via SMS. This secure process helps protect your account and verify your identity.
       tags:
         - V2
       requestBody:
@@ -447,12 +467,12 @@ paths:
               properties:
                 phone:
                   type: string
-                  description: Phone number to send the OTP to.
+                  description: The phone number where you would like to receive the OTP.
               required:
                 - phone
       responses:
         '200':
-          description: OTP generated and sent.
+          description: Your OTP has been generated and sent to your phone.
           content:
             application/json:
               schema:
@@ -460,18 +480,21 @@ paths:
                 properties:
                   status:
                     type: string
+                    description: The current status of your OTP request.
                   message:
                     type: string
+                    description: A confirmation message.
         '400':
-          description: Bad Request.
+          description: There was a problem with your request. Please check the phone number provided.
         '401':
-          description: Unauthorized.
+          description: You are not authorized to generate an OTP.
         '500':
-          description: Internal Server Error.
+          description: An unexpected error occurred on our server.
   /api/v2/otp/verify:
     get:
       summary: Verify OTP (V2)
-      description: Verify the one-time password (OTP) for a given phone number.
+      description: >
+        Confirm the one-time password (OTP) you received on your phone. Simply provide your phone number and the OTP to complete the verification process.
       tags:
         - V2
       parameters:
@@ -480,16 +503,16 @@ paths:
           schema:
             type: string
           required: true
-          description: Phone number for which the OTP was generated.
+          description: The phone number used to receive the OTP.
         - in: query
           name: otp
           schema:
             type: string
           required: true
-          description: The OTP to verify.
+          description: The one-time password you received.
       responses:
         '200':
-          description: OTP verified successfully.
+          description: Your OTP has been successfully verified.
           content:
             application/json:
               schema:
@@ -497,21 +520,22 @@ paths:
                 properties:
                   status:
                     type: string
+                    description: The current status of your verification.
                   message:
                     type: string
+                    description: A confirmation message.
         '400':
-          description: Bad Request - Invalid or expired OTP.
+          description: The OTP is either invalid or has expired. Please try again.
         '401':
-          description: Unauthorized.
+          description: Your authentication failed. Please check your credentials.
         '500':
-          description: Internal Server Error.
+          description: An error occurred during OTP verification.
   /api/v2/makecall:
     post:
       summary: Initiate a Call (Make Call API)
       description: >
-        Initiate a phone call using the 3CX API.
-        **Authentication:** This endpoint uses Basic Authentication and requires a valid API username and password from 3CX.
-        **Required Fields:** The request body must include the FQDN (Fully Qualified Domain Name) and EXT (Extension) for the call.
+        Start a phone call easily using our integrated 3CX API. Provide the reason for the call, the destination number, and the required call details (FQDN and extension), and we will initiate the call for you.
+        **Note:** This endpoint uses Basic Authentication, so please ensure you have a valid API username and password.
       tags:
         - V2
       security:
@@ -525,19 +549,19 @@ paths:
               properties:
                 reason:
                   type: string
-                  description: Reason for the call initiation.
+                  description: The reason for initiating the call.
                 destination:
                   type: string
-                  description: Destination phone number to call.
+                  description: The phone number you want to call.
                 FQDN:
                   type: string
-                  description: Fully Qualified Domain Name for the 3CX API.
+                  description: The Fully Qualified Domain Name needed for the 3CX API.
                 EXT:
                   type: string
-                  description: Extension number for the call.
+                  description: Your extension number for the call.
                 timeout:
                   type: integer
-                  description: Timeout duration in seconds.
+                  description: How long to wait (in seconds) before timing out.
               required:
                 - reason
                 - destination
@@ -546,7 +570,7 @@ paths:
                 - timeout
       responses:
         '200':
-          description: Call initiated successfully.
+          description: Your call has been successfully initiated.
           content:
             application/json:
               schema:
@@ -554,11 +578,13 @@ paths:
                 properties:
                   status:
                     type: string
+                    description: The status of your call request.
                   message:
                     type: string
+                    description: A confirmation message.
         '400':
-          description: Bad Request - Missing or invalid parameters.
+          description: There was an issue with your request. Please verify all required parameters.
         '401':
-          description: Unauthorized - Invalid API credentials.
+          description: Authentication failed. Please check your API credentials.
         '500':
-          description: Internal Server Error.
+          description: An error occurred on our server while trying to initiate the call.
