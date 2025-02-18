@@ -530,6 +530,74 @@ paths:
           description: Your authentication failed. Please check your credentials.
         '500':
           description: An error occurred during OTP verification.
+  /api/v2/sms/send/bulk:
+  post:
+    summary: Send Bulk SMS (V2)
+    description: >
+      Send a single message to multiple recipients in one request. This endpoint allows you to specify multiple phone numbers in the `"to"` field, either as an array or a comma-separated string.
+    tags:
+      - V2
+    security:
+      - BearerAuth: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              from:
+                type: string
+                description: The sender's phone number.
+              to:
+                oneOf:
+                  - type: array
+                    items:
+                      type: string
+                    description: An array of recipient phone numbers.
+                  - type: string
+                    description: A comma-separated string of recipient phone numbers.
+              text:
+                type: string
+                description: The message content to be sent.
+            required:
+              - from
+              - to
+              - text
+    responses:
+      '200':
+        description: The bulk SMS messages have been successfully processed.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  description: The overall status of the request.
+                results:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      to:
+                        type: string
+                        description: The recipient phone number.
+                      status:
+                        type: string
+                        description: Indicates whether the SMS was sent successfully or failed.
+                      messageId:
+                        type: string
+                        description: A unique ID for successfully sent messages.
+                      error:
+                        type: string
+                        description: Error details if the SMS could not be sent.
+      '400':
+        description: The request was invalid. Check your input.
+      '401':
+        description: Unauthorized. Please check your authentication token.
+      '500':
+        description: An internal server error occurred while processing the bulk SMS.
   /api/v2/makecall:
     post:
       summary: Initiate a Call (Make Call API)
