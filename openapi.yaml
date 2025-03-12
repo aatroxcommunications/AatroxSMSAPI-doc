@@ -451,64 +451,6 @@ paths:
           description: You are not authorized to access this information.
         '500':
           description: An error occurred while retrieving your message history.
-  /api/v2/makecall:
-    post:
-      summary: Initiate a Call (Make Call API)
-      description: >
-        Start a phone call easily using our integrated 3CX API. Provide the reason for the call, the destination number, and the required call details (FQDN and extension), and we will initiate the call for you.
-        **Note:** This endpoint uses Basic Authentication, so please ensure you have a valid API username and password.
-      tags:
-        - V2
-      security:
-        - BasicAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                reason:
-                  type: string
-                  description: The reason for initiating the call.
-                destination:
-                  type: string
-                  description: The phone number you want to call.
-                FQDN:
-                  type: string
-                  description: The Fully Qualified Domain Name needed for the 3CX API.
-                EXT:
-                  type: string
-                  description: Your extension number for the call.
-                timeout:
-                  type: integer
-                  description: How long to wait (in seconds) before timing out.
-              required:
-                - reason
-                - destination
-                - FQDN
-                - EXT
-                - timeout
-      responses:
-        '200':
-          description: Your call has been successfully initiated.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    description: The status of your call request.
-                  message:
-                    type: string
-                    description: A confirmation message.
-        '400':
-          description: There was an issue with your request. Please verify all required parameters.
-        '401':
-          description: Authentication failed. Please check your API credentials.
-        '500':
-          description: An error occurred on our server while trying to initiate the call.
   /api/v2/sms/send/bulk:
     post:
       summary: Send Bulk SMS (V2)
