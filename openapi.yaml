@@ -6,7 +6,7 @@ info:
     Welcome to the Aatrox Communication SMS API! This documentation covers all endpoints needed to send, receive, and manage SMS messages reliably. Integrate into your applications and enjoy robust features such as disclaimer appending, message content storage toggling, and more.
 servers:
   - url: 'https://api.smsaatrox.com.au'
-    description: V2 Server – Enhanced features with extra flexibility and control.
+    description: V2 Server
 components:
   securitySchemes:
     BearerAuth:
