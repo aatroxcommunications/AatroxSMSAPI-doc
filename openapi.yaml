@@ -1,16 +1,12 @@
 openapi: 3.0.0
 info:
-  version: 1.0.3
+  version: 2.0.0
   title: Aatrox Communication SMS RESTful API
   description: >
-    Welcome to the Aatrox Communication SMS API! This API makes it simple and secure to send text messages, verify one-time passwords, and even initiate calls—all from a single platform. Whether you're using our legacy version or our improved V2 endpoints, you'll find clear instructions and easy-to-follow steps to integrate SMS and call functionality into your applications.
+    Welcome to the Aatrox Communication SMS API! This documentation covers all endpoints needed to send, receive, and manage SMS messages reliably. Integrate seamlessly into your applications and enjoy robust features such as disclaimer appending, message content storage toggling, and more.
 servers:
-  - url: 'https://send.smsaatrox.com.au'
-    description: Send SMS API V1 – Simple and straightforward SMS sending.
-  - url: 'https://receive.smsaatrox.com.au'
-    description: Receive SMS API V1 – Easily get incoming messages.
   - url: 'https://api.smsaatrox.com.au'
-    description: API V2 – Enhanced features with extra flexibility and control.
+    description: Production Server – Enhanced features with extra flexibility and control.
 components:
   securitySchemes:
     BearerAuth:
@@ -20,65 +16,13 @@ components:
       type: http
       scheme: basic
 paths:
-  /api/v1:
-    post:
-      summary: Send SMS (V1)
-      description: >
-        Send a text message quickly and easily using our V1 SMS service. Provide the sender and recipient phone numbers along with your message, and we'll take care of the rest.
-      tags:
-        - V1
-      security:
-        - BearerAuth: []
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                from:
-                  type: string
-                  description: The phone number sending the message.
-                to:
-                  type: string
-                  description: The recipient's phone number.
-                text:
-                  type: string
-                  description: The message content you wish to send.
-              required:
-                - from
-                - to
-                - text
-      responses:
-        '200':
-          description: Your SMS was sent successfully.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    description: The current status of your SMS request.
-                  message:
-                    type: string
-                    description: A message confirming the SMS action.
-                  messageId:
-                    type: string
-                    description: A unique identifier for the SMS.
-        '400':
-          description: We could not process your request due to invalid input.
-        '401':
-          description: Your authentication failed. Please check your credentials.
-        '500':
-          description: Oops! Something went wrong on our end.
   /api/v2/sms/send:
     post:
-      summary: Send SMS (V2)
+      summary: Send SMS
       description: >
-        Enjoy a more robust and enhanced SMS sending experience with our V2 service. Just provide the sender, recipient, and message content, and we’ll deliver your text reliably.
+        Send a text message quickly and securely. Provide the sender, recipient, and message content, and we’ll deliver your SMS reliably.
       tags:
-        - V2
+        - SMS
       security:
         - BearerAuth: []
       requestBody:
@@ -124,13 +68,14 @@ paths:
           description: Your authentication is not valid. Please try again.
         '500':
           description: An error occurred on our server.
+
   /api/v2/sms/send/disclaimer:
     post:
-      summary: Send SMS with Disclaimer (V2)
+      summary: Send SMS with Disclaimer
       description: >
         Send your text message along with an automatically appended disclaimer. We fetch the appropriate disclaimer based on the sender’s phone number and attach it to your message before sending.
       tags:
-        - V2
+        - SMS
       security:
         - BearerAuth: []
       requestBody:
@@ -173,13 +118,14 @@ paths:
           description: Authentication failed. Please check your credentials.
         '500':
           description: An unexpected error occurred on our end.
+
   /api/v2/sms/send/Enablecontent:
     post:
-      summary: Enable Request-Body Storage (V2)
+      summary: Enable Request-Body Storage
       description: >
-        Enable the feature to store the content of your text messages. Once enabled for your phone number, every SMS sent via our V2 endpoints will have its text securely stored in our database.
+        Enable the feature to store the content of your text messages. Once enabled for your phone number, every SMS sent via our endpoints will have its text securely stored in our database.
       tags:
-        - V2
+        - SMS
       security:
         - BearerAuth: []
       requestBody:
@@ -214,13 +160,14 @@ paths:
           description: You are not authorized to perform this action.
         '500':
           description: A server error occurred. Please try again later.
+
   /api/v2/sms/send/DisableContent:
     post:
-      summary: Disable Request-Body Storage (V2)
+      summary: Disable Request-Body Storage
       description: >
         Disable the storage of your text message content. After disabling, messages sent from your phone number will no longer be stored in our database.
       tags:
-        - V2
+        - SMS
       security:
         - BearerAuth: []
       requestBody:
@@ -255,13 +202,14 @@ paths:
           description: Your authentication failed. Please verify your credentials.
         '500':
           description: An error occurred on our server.
+
   /api/v2/sms/send/exportcsv:
     post:
-      summary: Export Stored SMS Content as Excel (XML) (V2)
+      summary: Export Stored SMS Content as Excel (SpreadsheetML)
       description: >
         Export all stored SMS content as an Excel file (in SpreadsheetML format). Provide your phone number (with storage enabled) and the email address where you want the export to be sent. We'll handle the file creation and emailing process for you.
       tags:
-        - V2
+        - SMS
       security:
         - BearerAuth: []
       requestBody:
@@ -300,13 +248,14 @@ paths:
           description: You are not authorized to perform this action.
         '500':
           description: An unexpected error occurred on our server.
+
   /api/v2/sms/receive:
     get:
-      summary: Receive SMS (V2)
+      summary: Receive SMS
       description: >
         Retrieve incoming text messages for the specified recipient. Use your phone number to quickly check all messages sent to you, and optionally filter by sender.
       tags:
-        - V2
+        - SMS
       security:
         - BearerAuth: []
       parameters:
@@ -357,13 +306,14 @@ paths:
           description: Your authentication is not valid.
         '500':
           description: An error occurred on our server.
+
   /api/v2/sms/{id}:
     get:
-      summary: Retrieve SMS Details (V2)
+      summary: Retrieve SMS Details
       description: >
         Get detailed information about a specific text message by using its unique message ID. This helps you track delivery details and timing.
       tags:
-        - V2
+        - SMS
       security:
         - BearerAuth: []
       parameters:
@@ -410,13 +360,14 @@ paths:
           description: Your authentication is not valid.
         '500':
           description: An error occurred while retrieving the message details.
+
   /api/v2/sms/info/{number}:
     get:
-      summary: Retrieve Message IDs and Timestamps (V2)
-      description: |
+      summary: Retrieve Message IDs and Timestamps
+      description: >
         Retrieve a list of all your sent message IDs along with the date and time they were sent. Simply provide your phone number, and we'll return the details in a clear, organized list.
       tags:
-        - V2
+        - SMS
       security:
         - BearerAuth: []
       parameters:
@@ -451,13 +402,14 @@ paths:
           description: You are not authorized to access this information.
         '500':
           description: An error occurred while retrieving your message history.
+
   /api/v2/sms/send/bulk:
     post:
-      summary: Send Bulk SMS (V2)
+      summary: Send Bulk SMS
       description: >
         Send a text message to multiple recipients in one request. Provide a sender phone number, a list of recipient phone numbers (either as an array or a comma-separated string), and the message content. The API will send the SMS to each recipient and return individual status results.
       tags:
-        - V2
+        - SMS
       security:
         - BearerAuth: []
       requestBody:
