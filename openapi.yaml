@@ -123,8 +123,7 @@ paths:
     post:
       summary: Enable Request-Body Storage
       description: >
-        Enable the feature to store the content of your text messages. Once enabled for your phone number, every SMS sent via our endpoints will have its text securely stored in our database.
-      tags:
+          Enable this feature to store your text message content in a dedicated database. Once enabled for your phone number, every SMS sent via our endpoints will be securely retained in this separate storage. By default, all messages are deleted on December 31 of each year unless extended retention is specifically requested.      tags:
         - SMS
       security:
         - BearerAuth: []
