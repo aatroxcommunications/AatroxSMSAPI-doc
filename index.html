@@ -3,23 +3,585 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Aatrox Communication SMS RESTful API</title>
+  <title>Aatrox Communication SMS API Documentation</title>
   <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist/swagger-ui.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+      color: #e0e0e0;
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Animated background */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: 
+        radial-gradient(circle at 20% 80%, rgba(79, 70, 229, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(147, 51, 234, 0.05) 0%, transparent 50%);
+      z-index: -1;
+      animation: float 20s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translate(0, 0) rotate(0deg); }
+      33% { transform: translate(-20px, -20px) rotate(1deg); }
+      66% { transform: translate(20px, -10px) rotate(-1deg); }
+    }
+
+    /* Custom header */
+    .custom-header {
+      background: rgba(15, 15, 15, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid rgba(79, 70, 229, 0.3);
+      padding: 2rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .header-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .logo-section {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .logo {
+      width: 50px;
+      height: 50px;
+      background: linear-gradient(135deg, #4f46e5 0%, #9333ea 100%);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: 24px;
+      color: white;
+      box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
+      animation: pulse 3s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    .header-title h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #e0e0e0 0%, #a0a0a0 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.25rem;
+    }
+
+    .header-title p {
+      color: #888;
+      font-size: 0.9rem;
+    }
+
+    .header-nav {
+      display: flex;
+      gap: 2rem;
+      align-items: center;
+    }
+
+    .nav-link {
+      color: #e0e0e0;
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: all 0.3s ease;
+      position: relative;
+      padding: 0.5rem 0;
+    }
+
+    .nav-link::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: linear-gradient(90deg, #4f46e5 0%, #9333ea 100%);
+      transition: width 0.3s ease;
+    }
+
+    .nav-link:hover {
+      color: #4f46e5;
+    }
+
+    .nav-link:hover::after {
+      width: 100%;
+    }
+
+    .version-badge {
+      background: rgba(79, 70, 229, 0.2);
+      color: #a78bfa;
+      padding: 0.25rem 0.75rem;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      border: 1px solid rgba(79, 70, 229, 0.3);
+    }
+
+    /* Feature cards */
+    .features-section {
+      max-width: 1400px;
+      margin: 3rem auto;
+      padding: 0 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+    }
+
+    .feature-card {
+      background: rgba(30, 30, 30, 0.6);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(79, 70, 229, 0.2);
+      border-radius: 16px;
+      padding: 1.5rem;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .feature-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, transparent 0%, rgba(79, 70, 229, 0.1) 100%);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(79, 70, 229, 0.5);
+      box-shadow: 0 10px 30px rgba(79, 70, 229, 0.2);
+    }
+
+    .feature-card:hover::before {
+      opacity: 1;
+    }
+
+    .feature-icon {
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #4f46e5 0%, #9333ea 100%);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+      font-size: 24px;
+    }
+
+    .feature-card h3 {
+      font-size: 1.25rem;
+      margin-bottom: 0.5rem;
+      color: #e0e0e0;
+    }
+
+    .feature-card p {
+      color: #a0a0a0;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    /* Swagger UI customization */
+    #swagger-ui {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 0 2rem 4rem;
+      background: rgba(20, 20, 20, 0.6);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      border: 1px solid rgba(79, 70, 229, 0.2);
+    }
+
+    /* Override Swagger UI theme */
+    .swagger-ui .topbar {
+      display: none;
+    }
+
+    .swagger-ui .info .title {
+      color: #e0e0e0;
+    }
+
+    .swagger-ui .info .description {
+      color: #a0a0a0;
+    }
+
+    .swagger-ui .scheme-container {
+      background: rgba(30, 30, 30, 0.6);
+      border: 1px solid rgba(79, 70, 229, 0.2);
+      border-radius: 8px;
+      padding: 1rem;
+    }
+
+    .swagger-ui .btn {
+      background: linear-gradient(135deg, #4f46e5 0%, #9333ea 100%);
+      color: white;
+      border: none;
+      transition: all 0.3s ease;
+    }
+
+    .swagger-ui .btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(79, 70, 229, 0.3);
+    }
+
+    .swagger-ui .opblock {
+      background: rgba(30, 30, 30, 0.6);
+      border: 1px solid rgba(79, 70, 229, 0.2);
+      border-radius: 8px;
+      margin-bottom: 1rem;
+      transition: all 0.3s ease;
+    }
+
+    .swagger-ui .opblock:hover {
+      border-color: rgba(79, 70, 229, 0.4);
+      box-shadow: 0 4px 15px rgba(79, 70, 229, 0.1);
+    }
+
+    .swagger-ui .opblock.opblock-post .opblock-summary {
+      border-color: #10b981;
+    }
+
+    .swagger-ui .opblock.opblock-get .opblock-summary {
+      border-color: #3b82f6;
+    }
+
+    .swagger-ui .opblock .opblock-summary {
+      background: rgba(40, 40, 40, 0.8);
+    }
+
+    .swagger-ui .parameter__name {
+      color: #a78bfa;
+    }
+
+    .swagger-ui .parameter__type {
+      color: #60a5fa;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 2rem;
+      color: #666;
+      font-size: 0.9rem;
+      border-top: 1px solid rgba(79, 70, 229, 0.2);
+      margin-top: 4rem;
+    }
+
+    .footer a {
+      color: #a78bfa;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+
+    .footer a:hover {
+      color: #c4b5fd;
+    }
+
+    /* Loading animation */
+    .loading-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #0f0f0f;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease;
+    }
+
+    .loading-spinner {
+      width: 60px;
+      height: 60px;
+      border: 3px solid rgba(79, 70, 229, 0.2);
+      border-top: 3px solid #4f46e5;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .header-content {
+        flex-direction: column;
+        gap: 1.5rem;
+      }
+
+      .header-nav {
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .features-section {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 <body>
-  <div id="swagger-ui"></div>
+  <!-- Loading Screen -->
+  <div class="loading-container" id="loading">
+    <div class="loading-spinner"></div>
+  </div>
+
+  <!-- Custom Header -->
+  <header class="custom-header">
+    <div class="header-content">
+      <div class="logo-section">
+        <div class="logo">A</div>
+        <div class="header-title">
+          <h1>Aatrox Communication</h1>
+          <p>SMS RESTful API Documentation</p>
+        </div>
+      </div>
+      <nav class="header-nav">
+        <a href="#" class="nav-link">Home</a>
+        <a href="#features" class="nav-link">Features</a>
+        <a href="#api-docs" class="nav-link">API Docs</a>
+        <a href="#support" class="nav-link">Support</a>
+        <span class="version-badge">v2.0.0</span>
+      </nav>
+    </div>
+  </header>
+
+  <!-- Features Section -->
+  <section class="features-section" id="features">
+    <div class="feature-card">
+      <div class="feature-icon">📱</div>
+      <h3>SMS Messaging</h3>
+      <p>Send single or bulk SMS messages with our reliable delivery infrastructure. Support for international numbers and Unicode content.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📋</div>
+      <h3>Disclaimer Management</h3>
+      <p>Automatically append custom disclaimers to your messages based on sender configuration. Perfect for compliance requirements.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📞</div>
+      <h3>Call Integration</h3>
+      <p>Integrate with telephony systems to trigger SMS notifications on call events and programmatically initiate outbound calls.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💾</div>
+      <h3>Message Storage</h3>
+      <p>Enable content storage for compliance and analytics. Export your message history to Excel with our convenient export feature.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔐</div>
+      <h3>Secure Authentication</h3>
+      <p>Multiple authentication methods including Bearer tokens and Basic auth. Per-number security tokens for granular access control.</p>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⚡</div>
+      <h3>Real-time Webhooks</h3>
+      <p>Receive instant notifications for incoming messages and delivery status updates through configurable webhook endpoints.</p>
+    </div>
+  </section>
+
+  <!-- Swagger UI Container -->
+  <div id="api-docs">
+    <div id="swagger-ui"></div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>&copy; 2025 Aatrox Communication. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+  </footer>
+
   <script src="https://unpkg.com/swagger-ui-dist/swagger-ui-bundle.js"></script>
   <script>
-    // Initialize Swagger UI
-    SwaggerUIBundle({
+    // Hide loading screen when page loads
+    window.addEventListener('load', function() {
+      setTimeout(() => {
+        const loading = document.getElementById('loading');
+        loading.style.opacity = '0';
+        setTimeout(() => loading.style.display = 'none', 500);
+      }, 1000);
+    });
+
+    // Smooth scrolling for navigation
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+
+    // Initialize Swagger UI with custom theme
+    const ui = SwaggerUIBundle({
       url: './openapi.yaml', // Path to the OpenAPI YAML file
       dom_id: '#swagger-ui',
+      deepLinking: true,
       presets: [
         SwaggerUIBundle.presets.apis,
         SwaggerUIBundle.SwaggerUIStandalonePreset
       ],
-      layout: "BaseLayout"
+      plugins: [
+        SwaggerUIBundle.plugins.DownloadUrl
+      ],
+      layout: "BaseLayout",
+      defaultModelsExpandDepth: -1,
+      defaultModelExpandDepth: 1,
+      displayRequestDuration: true,
+      filter: true,
+      showExtensions: true,
+      showCommonExtensions: true,
+      customCss: `
+        .swagger-ui {
+          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        .swagger-ui .info {
+          margin-bottom: 2rem;
+        }
+        .swagger-ui .scheme-container {
+          margin-bottom: 2rem;
+        }
+      `,
+      onComplete: function() {
+        // Add custom styling to Swagger UI elements after load
+        const operations = document.querySelectorAll('.opblock');
+        operations.forEach(op => {
+          op.addEventListener('mouseenter', function() {
+            this.style.transform = 'translateX(5px)';
+          });
+          op.addEventListener('mouseleave', function() {
+            this.style.transform = 'translateX(0)';
+          });
+        });
+      }
     });
+
+    // Add intersection observer for fade-in animations
+    const observerOptions = {
+      threshold: 0.1,
+      rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.style.opacity = '1';
+          entry.target.style.transform = 'translateY(0)';
+        }
+      });
+    }, observerOptions);
+
+    // Observe feature cards
+    document.querySelectorAll('.feature-card').forEach((card, index) => {
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(20px)';
+      card.style.transition = `all 0.6s ease ${index * 0.1}s`;
+      observer.observe(card);
+    });
+
+    // Add parallax effect to background
+    let ticking = false;
+    function updateParallax() {
+      const scrolled = window.pageYOffset;
+      const parallax = document.querySelector('body::before');
+      if (parallax) {
+        const speed = 0.5;
+        const yPos = -(scrolled * speed);
+        document.body.style.setProperty('--parallax-y', `${yPos}px`);
+      }
+      ticking = false;
+    }
+
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateParallax);
+        ticking = true;
+      }
+    });
+
+    // Add copy-to-clipboard functionality for code snippets
+    document.addEventListener('click', function(e) {
+      if (e.target.classList.contains('copy-to-clipboard')) {
+        const code = e.target.parentElement.querySelector('code');
+        if (code) {
+          navigator.clipboard.writeText(code.textContent).then(() => {
+            const originalText = e.target.textContent;
+            e.target.textContent = 'Copied!';
+            setTimeout(() => {
+              e.target.textContent = originalText;
+            }, 2000);
+          });
+        }
+      }
+    });
+
+    // Add keyboard navigation
+    document.addEventListener('keydown', function(e) {
+      // Press '/' to focus on search
+      if (e.key === '/' && !e.ctrlKey && !e.metaKey) {
+        e.preventDefault();
+        const searchInput = document.querySelector('.swagger-ui .filter-container input');
+        if (searchInput) {
+          searchInput.focus();
+        }
+      }
+    });
+
+    // Enhanced error handling
+    window.addEventListener('unhandledrejection', event => {
+      console.error('Unhandled promise rejection:', event.reason);
+    });
+
+    // Performance monitoring
+    if ('PerformanceObserver' in window) {
+      const perfObserver = new PerformanceObserver((list) => {
+        for (const entry of list.getEntries()) {
+          console.log(`${entry.name}: ${entry.duration.toFixed(2)}ms`);
+        }
+      });
+      perfObserver.observe({ entryTypes: ['measure'] });
+    }
   </script>
 </body>
 </html>
