@@ -3,7 +3,7 @@ info:
   version: 2.0.0
   title: Aatrox Communication SMS RESTful API
   description: >
-    Welcome to the Aatrox Communication SMS API! This documentation covers all endpoints needed to send, receive, and manage SMS messages reliably. Integrate into your applications and enjoy robust features such as disclaimer appending and more.
+    Welcome to the Aatrox Communication SMS API! This documentation covers all endpoints needed to send, receive, and manage SMS messages reliably. Integrate into your applications and enjoy robust features such as disclaimer appending, campaign management, call integration, and more.
 servers:
   - url: 'https://api.smsaatrox.com.au'
     description: V2 Server
@@ -12,12 +12,15 @@ components:
     BearerAuth:
       type: http
       scheme: bearer
+    BasicAuth:
+      type: http
+      scheme: basic
 paths:
   /api/v2/sms/send:
     post:
       summary: Send SMS
       description: >
-        Send a text message quickly and securely. Provide the sender, recipient, and message content, and we’ll deliver your SMS reliably.
+        Send a text message quickly and securely. Provide the sender, recipient, and message content, and we'll deliver your SMS reliably.
       tags:
         - SMS
       security:
@@ -56,9 +59,12 @@ paths:
                   message:
                     type: string
                     description: A confirmation message.
-                  messageId:
-                    type: string
-                    description: The unique ID for your sent message.
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: The unique ID for your sent message.
         '400':
           description: There was a problem with your request. Please check your input.
         '401':
@@ -70,7 +76,7 @@ paths:
     post:
       summary: Send SMS with Disclaimer
       description: >
-        Send your text message along with an automatically appended disclaimer. We fetch the appropriate disclaimer based on the sender’s phone number and attach it to your message before sending.
+        Send your text message along with an automatically appended disclaimer. We fetch the appropriate disclaimer based on the sender's phone number and attach it to your message before sending.
       tags:
         - SMS
       security:
@@ -106,9 +112,18 @@ paths:
                   status:
                     type: string
                     description: The current status of your SMS request.
+                  message_id:
+                    type: string
+                    description: The unique message identifier.
                   message:
                     type: string
                     description: A confirmation message.
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: The unique message identifier.
         '400':
           description: We could not process your request. Please verify your input.
         '401':
@@ -116,159 +131,53 @@ paths:
         '500':
           description: An unexpected error occurred on our end.
 
-  /api/v2/sms/receive:
-    get:
-      summary: Receive SMS
+  /api/v2/sms/send/disclaimer/campaign/CallEnded:
+    post:
+      summary: Campaign Call Ended Webhook
       description: >
-        Retrieve incoming text messages for the specified recipient. Use your phone number to quickly check all messages sent to you, and optionally filter by sender.
+        Webhook endpoint that automatically sends an SMS when a campaign call ends. This endpoint verifies the webhook signature and sends a pre-configured message to the caller.
       tags:
-        - SMS
-      security:
-        - BearerAuth: []
-      parameters:
-        - in: query
-          name: to
-          schema:
-            type: string
-          required: true
-          description: The recipient's phone number.
-        - in: query
-          name: from
-          schema:
-            type: string
-          required: false
-          description: (Optional) The sender's phone number to filter messages.
-      responses:
-        '200':
-          description: Your messages have been retrieved successfully.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    description: The status of your retrieval request.
-                  messages:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        from:
-                          type: string
-                          description: The sender's phone number.
-                        to:
-                          type: string
-                          description: Your phone number.
-                        text:
-                          type: string
-                          description: The message content.
-                        timestamp:
-                          type: string
-                          format: date-time
-                          description: The date and time when the message was received.
-        '400':
-          description: There was a problem with your request parameters.
-        '401':
-          description: Your authentication is not valid.
-        '500':
-          description: An error occurred on our server.
-
-  /api/v2/sms/{id}:
-    get:
-      summary: Retrieve SMS Details
-      description: >
-        Get detailed information about a specific text message by using its unique message ID. This helps you track delivery details and timing.
-      tags:
-        - SMS
-      security:
-        - BearerAuth: []
-      parameters:
-        - in: path
-          name: id
-          required: true
-          description: The unique message ID for which you want to see the details.
-          schema:
-            type: string
-      responses:
-        '200':
-          description: Details for your requested message have been successfully retrieved.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  to_addr:
-                    type: string
-                    description: The recipient's phone number.
-                  from_addr:
-                    type: string
-                    description: The sender's phone number.
-                  unicode:
-                    type: boolean
-                    description: Indicates if the message used Unicode characters.
-                  created_at:
-                    type: string
-                    format: date-time
-                    description: The time when the message was created.
-                  status:
-                    type: string
-                    description: The current delivery status of the message.
-                  status_at:
-                    type: string
-                    format: date-time
-                    description: The time when the status was last updated.
-                  segment_count:
-                    type: integer
-                    description: The number of SMS segments used.
-        '400':
-          description: There was a problem with your request. Please verify the message ID.
-        '401':
-          description: Your authentication is not valid.
-        '500':
-          description: An error occurred while retrieving the message details.
-
-  /api/v2/sms/info/{number}:
-    get:
-      summary: Retrieve Message IDs and Timestamps
-      description: >
-        Retrieve a list of all your sent message IDs along with the date and time they were sent. Simply provide your phone number, and we'll return the details in a clear, organized list.
-      tags:
-        - SMS
-      security:
-        - BearerAuth: []
-      parameters:
-        - in: path
-          name: number
-          required: true
-          description: Your phone number for which you want the message history.
-          schema:
-            type: string
-      responses:
-        '200':
-          description: The list of message IDs, dates, and times has been successfully retrieved.
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
+        - Campaign
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                type:
+                  type: string
+                  description: Event type (must be "CallEnded")
+                data:
                   type: object
                   properties:
-                    messageid:
-                      type: string
-                      description: The unique ID of the message.
-                    date:
-                      type: string
-                      description: The date when the message was sent (e.g., "17/12/2024").
-                    time:
-                      type: string
-                      description: The time when the message was sent, including the timezone (e.g., "11:03 am (AEDT)").
-        '400':
-          description: Your request parameters appear to be incorrect.
+                    callDetails:
+                      type: object
+                      properties:
+                        number:
+                          type: string
+                          description: The caller's phone number
+              required:
+                - type
+                - data
+      responses:
+        '200':
+          description: SMS sent successfully for CallEnded event.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: The status of the operation.
+                  message:
+                    type: string
+                    description: Success message.
         '401':
-          description: You are not authorized to access this information.
-        '500':
-          description: An error occurred while retrieving your message history.
+          description: Invalid webhook signature.
+        '502':
+          description: Failed to send SMS.
 
   /api/v2/sms/send/bulk:
     post:
@@ -338,3 +247,339 @@ paths:
           description: Your authentication failed. Please check your credentials.
         '500':
           description: An error occurred on our server.
+
+  /api/v2/sms/send/Enablecontent:
+    post:
+      summary: Enable Content Storage
+      description: >
+        Enable message content storage for a specific phone number. When enabled, the system will store the message body for all SMS sent from this number.
+      tags:
+        - Storage Management
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                from:
+                  type: string
+                  description: The phone number to enable content storage for.
+              required:
+                - from
+      responses:
+        '200':
+          description: Content storage has been enabled successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: The status of the operation.
+                  message:
+                    type: string
+                    description: Confirmation message.
+        '401':
+          description: Authentication failed.
+        '500':
+          description: Server error.
+
+  /api/v2/sms/send/DisableContent:
+    post:
+      summary: Disable Content Storage
+      description: >
+        Disable message content storage for a specific phone number. When disabled, the system will not store message bodies for SMS sent from this number.
+      tags:
+        - Storage Management
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                from:
+                  type: string
+                  description: The phone number to disable content storage for.
+              required:
+                - from
+      responses:
+        '200':
+          description: Content storage has been disabled successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: The status of the operation.
+                  message:
+                    type: string
+                    description: Confirmation message.
+        '401':
+          description: Authentication failed.
+        '500':
+          description: Server error.
+
+  /api/v2/sms/send/exportcsv:
+    post:
+      summary: Export SMS Content to Excel
+      description: >
+        Export stored SMS content to an Excel file and email it to the specified address. You can export data for one or multiple phone numbers. Content storage must be enabled for the requested numbers.
+      tags:
+        - Storage Management
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                from:
+                  oneOf:
+                    - type: string
+                      description: A single phone number to export data for.
+                    - type: array
+                      items:
+                        type: string
+                      description: An array of phone numbers to export data for.
+                email:
+                  type: string
+                  format: email
+                  description: The email address to send the Excel export to.
+              required:
+                - from
+                - email
+      responses:
+        '200':
+          description: Excel export email has been sent successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: The status of the operation.
+                  message:
+                    type: string
+                    description: Success message.
+        '400':
+          description: Content storage not enabled or invalid request.
+        '401':
+          description: Authentication failed.
+        '500':
+          description: Failed to send email or server error.
+
+  /api/v2/sms/receive:
+    get:
+      summary: Receive SMS Webhook
+      description: >
+        Webhook endpoint for receiving incoming SMS messages. The system will forward the message to the configured webhook URL for the recipient number.
+      tags:
+        - SMS
+      parameters:
+        - in: query
+          name: to
+          schema:
+            type: string
+          required: true
+          description: The recipient's phone number.
+        - in: query
+          name: from
+          schema:
+            type: string
+          required: true
+          description: The sender's phone number.
+        - in: query
+          name: id
+          schema:
+            type: string
+          required: false
+          description: Message ID (optional, will be generated if not provided).
+        - in: query
+          name: content
+          schema:
+            type: string
+          required: false
+          description: The message content.
+        - in: query
+          name: coding
+          schema:
+            type: string
+          required: false
+          description: Message encoding (0 for GSM-7, default is 0).
+      responses:
+        '200':
+          description: Message successfully forwarded to webhook.
+        '400':
+          description: Missing required parameters.
+        '404':
+          description: No webhook configured for the recipient number.
+        '500':
+          description: Failed to deliver webhook.
+
+  /api/v2/sms/{id}:
+    get:
+      summary: Retrieve SMS Details
+      description: >
+        Get detailed information about a specific text message by using its unique message ID. This helps you track delivery details and timing.
+      tags:
+        - SMS
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: The unique message ID for which you want to see the details.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Details for your requested message have been successfully retrieved.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  to_addr:
+                    type: string
+                    description: The recipient's phone number.
+                  from_addr:
+                    type: string
+                    description: The sender's phone number.
+                  unicode:
+                    type: boolean
+                    description: Indicates if the message used Unicode characters.
+                  created_at:
+                    type: string
+                    format: date-time
+                    description: The time when the message was created.
+                  status:
+                    type: string
+                    description: The current delivery status of the message.
+                  status_at:
+                    type: string
+                    format: date-time
+                    description: The time when the status was last updated.
+                  segment_count:
+                    type: integer
+                    description: The number of SMS segments used.
+        '400':
+          description: There was a problem with your request. Please verify the message ID.
+        '401':
+          description: Your authentication is not valid.
+        '502':
+          description: Failed to fetch message details from upstream.
+        '500':
+          description: An error occurred while retrieving the message details.
+
+  /api/v2/sms/info/{number}:
+    get:
+      summary: Retrieve Message IDs and Timestamps
+      description: >
+        Retrieve a list of all your sent message IDs along with the date and time they were sent. Simply provide your phone number, and we'll return the details in a clear, organized list.
+      tags:
+        - SMS
+      security:
+        - BearerAuth: []
+      parameters:
+        - in: path
+          name: number
+          required: true
+          description: Your phone number for which you want the message history.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: The list of message IDs, dates, and times has been successfully retrieved.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    messageid:
+                      type: string
+                      description: The unique ID of the message.
+                    date:
+                      type: string
+                      description: The date when the message was sent (e.g., "17/12/2024").
+                    time:
+                      type: string
+                      description: The time when the message was sent, including the timezone (e.g., "11:03 am (AEDT)").
+        '400':
+          description: Your request parameters appear to be incorrect.
+        '401':
+          description: You are not authorized to access this information.
+        '500':
+          description: An error occurred while retrieving your message history.
+
+  /api/v2/makecall:
+    post:
+      summary: Make Call
+      description: >
+        Initiate an outbound call through the API. This endpoint integrates with your telephony system to place calls programmatically.
+      tags:
+        - Call Management
+      security:
+        - BasicAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reason:
+                  type: string
+                  description: The reason for making the call.
+                destination:
+                  type: string
+                  description: The destination phone number to call.
+                FQDN:
+                  type: string
+                  description: The fully qualified domain name of your telephony server.
+                EXT:
+                  type: string
+                  description: The extension from which to make the call.
+                timeout:
+                  type: integer
+                  description: Call timeout in seconds.
+              required:
+                - reason
+                - destination
+                - FQDN
+                - EXT
+                - timeout
+      responses:
+        '200':
+          description: Call initiated successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: The status of the call initiation.
+                  message:
+                    type: string
+                    description: Success message.
+        '400':
+          description: Missing required fields.
+        '401':
+          description: Authentication failed.
+        '500':
+          description: Failed to initiate call.
