@@ -12,53 +12,42 @@
       box-sizing: border-box;
     }
 
+    :root {
+      --navy-blue: #003366;
+      --navy-blue-dark: #002244;
+      --bright-blue: #0080ff;
+      --bright-blue-hover: #0066cc;
+      --light-grey: #f5f7fa;
+      --medium-grey: #e1e8ed;
+      --dark-grey: #657786;
+      --white: #ffffff;
+      --shadow-light: rgba(0, 51, 102, 0.08);
+      --shadow-medium: rgba(0, 51, 102, 0.12);
+      --shadow-heavy: rgba(0, 51, 102, 0.16);
+    }
+
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-      background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
-      color: #e0e0e0;
-      min-height: 100vh;
-      position: relative;
+      background-color: var(--white);
+      color: var(--navy-blue-dark);
+      line-height: 1.6;
       overflow-x: hidden;
-    }
-
-    /* Animated background */
-    body::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: 
-        radial-gradient(circle at 20% 80%, rgba(79, 70, 229, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(99, 102, 241, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 40% 40%, rgba(147, 51, 234, 0.05) 0%, transparent 50%);
-      z-index: -1;
-      animation: float 20s ease-in-out infinite;
-    }
-
-    @keyframes float {
-      0%, 100% { transform: translate(0, 0) rotate(0deg); }
-      33% { transform: translate(-20px, -20px) rotate(1deg); }
-      66% { transform: translate(20px, -10px) rotate(-1deg); }
     }
 
     /* Custom header */
     .custom-header {
-      background: rgba(15, 15, 15, 0.95);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(79, 70, 229, 0.3);
-      padding: 2rem 0;
+      background: var(--white);
+      box-shadow: 0 2px 10px var(--shadow-light);
       position: sticky;
       top: 0;
       z-index: 1000;
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+      border-bottom: 3px solid var(--navy-blue);
     }
 
     .header-content {
       max-width: 1400px;
       margin: 0 auto;
-      padding: 0 2rem;
+      padding: 1.5rem 2rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -70,50 +59,40 @@
       gap: 1.5rem;
     }
 
-    .logo {
-      width: 50px;
+    .logo-img {
       height: 50px;
-      background: linear-gradient(135deg, #4f46e5 0%, #9333ea 100%);
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      font-size: 24px;
-      color: white;
-      box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
-      animation: pulse 3s ease-in-out infinite;
+      width: auto;
+      transition: transform 0.3s ease;
     }
 
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.05); }
+    .logo-img:hover {
+      transform: scale(1.05);
     }
 
     .header-title h1 {
-      font-size: 2rem;
+      font-size: 1.75rem;
       font-weight: 700;
-      background: linear-gradient(135deg, #e0e0e0 0%, #a0a0a0 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 0.25rem;
+      color: var(--navy-blue);
+      margin-bottom: 0.125rem;
     }
 
     .header-title p {
-      color: #888;
+      color: var(--dark-grey);
       font-size: 0.9rem;
+      font-weight: 400;
     }
 
     .header-nav {
       display: flex;
-      gap: 2rem;
+      gap: 2.5rem;
       align-items: center;
     }
 
     .nav-link {
-      color: #e0e0e0;
+      color: var(--navy-blue);
       text-decoration: none;
       font-size: 0.95rem;
+      font-weight: 500;
       transition: all 0.3s ease;
       position: relative;
       padding: 0.5rem 0;
@@ -122,16 +101,16 @@
     .nav-link::after {
       content: '';
       position: absolute;
-      bottom: 0;
+      bottom: -3px;
       left: 0;
       width: 0;
-      height: 2px;
-      background: linear-gradient(90deg, #4f46e5 0%, #9333ea 100%);
+      height: 3px;
+      background: var(--bright-blue);
       transition: width 0.3s ease;
     }
 
     .nav-link:hover {
-      color: #4f46e5;
+      color: var(--bright-blue);
     }
 
     .nav-link:hover::after {
@@ -139,34 +118,117 @@
     }
 
     .version-badge {
-      background: rgba(79, 70, 229, 0.2);
-      color: #a78bfa;
-      padding: 0.25rem 0.75rem;
+      background: var(--navy-blue);
+      color: var(--white);
+      padding: 0.375rem 1rem;
       border-radius: 20px;
       font-size: 0.85rem;
-      border: 1px solid rgba(79, 70, 229, 0.3);
+      font-weight: 500;
+      transition: all 0.3s ease;
+    }
+
+    .version-badge:hover {
+      background: var(--bright-blue);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px var(--shadow-medium);
+    }
+
+    /* Hero Section */
+    .hero-section {
+      background: linear-gradient(135deg, var(--navy-blue) 0%, var(--navy-blue-dark) 100%);
+      color: var(--white);
+      padding: 4rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-section::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(0, 128, 255, 0.1) 0%, transparent 70%);
+      animation: rotate 30s linear infinite;
+    }
+
+    @keyframes rotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .hero-content {
+      max-width: 800px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-content h2 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      font-weight: 700;
+    }
+
+    .hero-content p {
+      font-size: 1.25rem;
+      opacity: 0.9;
+      margin-bottom: 2rem;
+    }
+
+    .cta-button {
+      display: inline-block;
+      background: var(--bright-blue);
+      color: var(--white);
+      padding: 0.875rem 2rem;
+      border-radius: 30px;
+      text-decoration: none;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0, 128, 255, 0.3);
+    }
+
+    .cta-button:hover {
+      background: var(--bright-blue-hover);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(0, 128, 255, 0.4);
     }
 
     /* Feature cards */
     .features-section {
+      background: var(--light-grey);
+      padding: 4rem 2rem;
+    }
+
+    .features-container {
       max-width: 1400px;
-      margin: 3rem auto;
-      padding: 0 2rem;
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-      gap: 1.5rem;
+      margin: 0 auto;
+    }
+
+    .section-title {
+      text-align: center;
+      font-size: 2rem;
+      color: var(--navy-blue);
       margin-bottom: 3rem;
+      font-weight: 700;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 2rem;
     }
 
     .feature-card {
-      background: rgba(30, 30, 30, 0.6);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(79, 70, 229, 0.2);
-      border-radius: 16px;
-      padding: 1.5rem;
+      background: var(--white);
+      border-radius: 12px;
+      padding: 2rem;
       transition: all 0.3s ease;
       position: relative;
-      overflow: hidden;
+      border: 1px solid var(--medium-grey);
+      height: 100%;
     }
 
     .feature-card::before {
@@ -174,17 +236,17 @@
       position: absolute;
       top: 0;
       left: 0;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(135deg, transparent 0%, rgba(79, 70, 229, 0.1) 100%);
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--navy-blue) 0%, var(--bright-blue) 100%);
+      border-radius: 12px 12px 0 0;
       opacity: 0;
       transition: opacity 0.3s ease;
     }
 
     .feature-card:hover {
       transform: translateY(-5px);
-      border-color: rgba(79, 70, 229, 0.5);
-      box-shadow: 0 10px 30px rgba(79, 70, 229, 0.2);
+      box-shadow: 0 12px 30px var(--shadow-medium);
     }
 
     .feature-card:hover::before {
@@ -192,38 +254,48 @@
     }
 
     .feature-icon {
-      width: 48px;
-      height: 48px;
-      background: linear-gradient(135deg, #4f46e5 0%, #9333ea 100%);
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, var(--navy-blue) 0%, var(--bright-blue) 100%);
       border-radius: 12px;
       display: flex;
       align-items: center;
       justify-content: center;
-      margin-bottom: 1rem;
-      font-size: 24px;
+      margin-bottom: 1.5rem;
+      font-size: 28px;
+      color: var(--white);
+      box-shadow: 0 4px 12px var(--shadow-light);
     }
 
     .feature-card h3 {
-      font-size: 1.25rem;
-      margin-bottom: 0.5rem;
-      color: #e0e0e0;
+      font-size: 1.375rem;
+      margin-bottom: 0.75rem;
+      color: var(--navy-blue);
+      font-weight: 600;
     }
 
     .feature-card p {
-      color: #a0a0a0;
-      font-size: 0.95rem;
-      line-height: 1.6;
+      color: var(--dark-grey);
+      font-size: 1rem;
+      line-height: 1.7;
     }
 
-    /* Swagger UI customization */
-    #swagger-ui {
+    /* API Documentation Section */
+    .api-section {
+      background: var(--white);
+      padding: 4rem 2rem;
+    }
+
+    .api-container {
       max-width: 1400px;
       margin: 0 auto;
-      padding: 0 2rem 4rem;
-      background: rgba(20, 20, 20, 0.6);
-      backdrop-filter: blur(10px);
-      border-radius: 16px;
-      border: 1px solid rgba(79, 70, 229, 0.2);
+    }
+
+    #swagger-ui {
+      background: var(--white);
+      padding: 2rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px var(--shadow-light);
     }
 
     /* Override Swagger UI theme */
@@ -232,83 +304,169 @@
     }
 
     .swagger-ui .info .title {
-      color: #e0e0e0;
+      color: var(--navy-blue);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     }
 
     .swagger-ui .info .description {
-      color: #a0a0a0;
+      color: var(--dark-grey);
     }
 
     .swagger-ui .scheme-container {
-      background: rgba(30, 30, 30, 0.6);
-      border: 1px solid rgba(79, 70, 229, 0.2);
+      background: var(--light-grey);
+      border: 1px solid var(--medium-grey);
       border-radius: 8px;
       padding: 1rem;
+      box-shadow: none;
     }
 
     .swagger-ui .btn {
-      background: linear-gradient(135deg, #4f46e5 0%, #9333ea 100%);
-      color: white;
+      background: var(--bright-blue);
+      color: var(--white);
       border: none;
+      border-radius: 6px;
+      font-weight: 500;
       transition: all 0.3s ease;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     }
 
     .swagger-ui .btn:hover {
+      background: var(--bright-blue-hover);
       transform: translateY(-2px);
-      box-shadow: 0 5px 15px rgba(79, 70, 229, 0.3);
+      box-shadow: 0 4px 12px var(--shadow-medium);
+    }
+
+    .swagger-ui .btn.authorize {
+      background: var(--navy-blue);
+    }
+
+    .swagger-ui .btn.authorize:hover {
+      background: var(--navy-blue-dark);
     }
 
     .swagger-ui .opblock {
-      background: rgba(30, 30, 30, 0.6);
-      border: 1px solid rgba(79, 70, 229, 0.2);
+      background: var(--white);
+      border: 1px solid var(--medium-grey);
       border-radius: 8px;
       margin-bottom: 1rem;
+      box-shadow: 0 2px 8px var(--shadow-light);
       transition: all 0.3s ease;
     }
 
     .swagger-ui .opblock:hover {
-      border-color: rgba(79, 70, 229, 0.4);
-      box-shadow: 0 4px 15px rgba(79, 70, 229, 0.1);
+      box-shadow: 0 4px 16px var(--shadow-medium);
     }
 
     .swagger-ui .opblock.opblock-post .opblock-summary {
       border-color: #10b981;
+      background: rgba(16, 185, 129, 0.05);
     }
 
     .swagger-ui .opblock.opblock-get .opblock-summary {
-      border-color: #3b82f6;
+      border-color: var(--bright-blue);
+      background: rgba(0, 128, 255, 0.05);
     }
 
-    .swagger-ui .opblock .opblock-summary {
-      background: rgba(40, 40, 40, 0.8);
+    .swagger-ui .opblock-summary {
+      border: none;
+      border-left: 4px solid;
     }
 
     .swagger-ui .parameter__name {
-      color: #a78bfa;
+      color: var(--navy-blue);
+      font-weight: 600;
     }
 
     .swagger-ui .parameter__type {
-      color: #60a5fa;
+      color: var(--bright-blue);
+    }
+
+    .swagger-ui select {
+      background: var(--white);
+      border: 1px solid var(--medium-grey);
+      color: var(--navy-blue);
+    }
+
+    .swagger-ui .response-col_status {
+      color: var(--navy-blue);
+      font-weight: 600;
+    }
+
+    /* Stats Section */
+    .stats-section {
+      background: var(--navy-blue);
+      color: var(--white);
+      padding: 3rem 2rem;
+      text-align: center;
+    }
+
+    .stats-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 2rem;
+    }
+
+    .stat-item h3 {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--bright-blue);
+    }
+
+    .stat-item p {
+      font-size: 1rem;
+      opacity: 0.9;
     }
 
     /* Footer */
     .footer {
-      text-align: center;
-      padding: 2rem;
-      color: #666;
-      font-size: 0.9rem;
-      border-top: 1px solid rgba(79, 70, 229, 0.2);
-      margin-top: 4rem;
+      background: var(--navy-blue-dark);
+      color: var(--white);
+      padding: 3rem 2rem 2rem;
     }
 
-    .footer a {
-      color: #a78bfa;
+    .footer-content {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 3rem;
+      margin-bottom: 2rem;
+    }
+
+    .footer-section h4 {
+      font-size: 1.25rem;
+      margin-bottom: 1rem;
+      color: var(--bright-blue);
+    }
+
+    .footer-section ul {
+      list-style: none;
+    }
+
+    .footer-section ul li {
+      margin-bottom: 0.75rem;
+    }
+
+    .footer-section a {
+      color: var(--white);
       text-decoration: none;
-      transition: color 0.3s ease;
+      opacity: 0.8;
+      transition: all 0.3s ease;
     }
 
-    .footer a:hover {
-      color: #c4b5fd;
+    .footer-section a:hover {
+      opacity: 1;
+      color: var(--bright-blue);
+    }
+
+    .footer-bottom {
+      text-align: center;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      opacity: 0.8;
     }
 
     /* Loading animation */
@@ -318,7 +476,7 @@
       left: 0;
       width: 100%;
       height: 100%;
-      background: #0f0f0f;
+      background: var(--white);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -329,8 +487,8 @@
     .loading-spinner {
       width: 60px;
       height: 60px;
-      border: 3px solid rgba(79, 70, 229, 0.2);
-      border-top: 3px solid #4f46e5;
+      border: 4px solid var(--light-grey);
+      border-top: 4px solid var(--navy-blue);
       border-radius: 50%;
       animation: spin 1s linear infinite;
     }
@@ -345,15 +503,26 @@
       .header-content {
         flex-direction: column;
         gap: 1.5rem;
+        text-align: center;
       }
 
       .header-nav {
         flex-wrap: wrap;
         justify-content: center;
+        gap: 1.5rem;
       }
 
-      .features-section {
+      .hero-content h2 {
+        font-size: 2rem;
+      }
+
+      .features-grid {
         grid-template-columns: 1fr;
+      }
+
+      .footer-content {
+        grid-template-columns: 1fr;
+        text-align: center;
       }
     }
   </style>
@@ -368,14 +537,14 @@
   <header class="custom-header">
     <div class="header-content">
       <div class="logo-section">
-        <div class="logo">A</div>
+        <img src="https://aatroxcommunications.com.au/wp-content/uploads/2024/12/aatrox-logo.png" alt="Aatrox Communications" class="logo-img">
         <div class="header-title">
-          <h1>Aatrox Communication</h1>
-          <p>SMS RESTful API Documentation</p>
+          <h1>API Documentation</h1>
+          <p>SMS RESTful API v2.0</p>
         </div>
       </div>
       <nav class="header-nav">
-        <a href="#" class="nav-link">Home</a>
+        <a href="#home" class="nav-link">Home</a>
         <a href="#features" class="nav-link">Features</a>
         <a href="#api-docs" class="nav-link">API Docs</a>
         <a href="#support" class="nav-link">Support</a>
@@ -384,48 +553,121 @@
     </div>
   </header>
 
-  <!-- Features Section -->
-  <section class="features-section" id="features">
-    <div class="feature-card">
-      <div class="feature-icon">📱</div>
-      <h3>SMS Messaging</h3>
-      <p>Send single or bulk SMS messages with our reliable delivery infrastructure. Support for international numbers and Unicode content.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">📋</div>
-      <h3>Disclaimer Management</h3>
-      <p>Automatically append custom disclaimers to your messages based on sender configuration. Perfect for compliance requirements.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">📞</div>
-      <h3>Call Integration</h3>
-      <p>Integrate with telephony systems to trigger SMS notifications on call events and programmatically initiate outbound calls.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">💾</div>
-      <h3>Message Storage</h3>
-      <p>Enable content storage for compliance and analytics. Export your message history to Excel with our convenient export feature.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">🔐</div>
-      <h3>Secure Authentication</h3>
-      <p>Multiple authentication methods including Bearer tokens and Basic auth. Per-number security tokens for granular access control.</p>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">⚡</div>
-      <h3>Real-time Webhooks</h3>
-      <p>Receive instant notifications for incoming messages and delivery status updates through configurable webhook endpoints.</p>
+  <!-- Hero Section -->
+  <section class="hero-section" id="home">
+    <div class="hero-content">
+      <h2>Powerful SMS API for Modern Applications</h2>
+      <p>Integrate reliable SMS messaging, call notifications, and campaign management into your applications with our comprehensive RESTful API.</p>
+      <a href="#api-docs" class="cta-button">Explore API Documentation</a>
     </div>
   </section>
 
-  <!-- Swagger UI Container -->
-  <div id="api-docs">
-    <div id="swagger-ui"></div>
-  </div>
+  <!-- Features Section -->
+  <section class="features-section" id="features">
+    <div class="features-container">
+      <h2 class="section-title">Key Features</h2>
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon">📱</div>
+          <h3>SMS Messaging</h3>
+          <p>Send single or bulk SMS messages with our reliable delivery infrastructure. Support for international numbers and Unicode content ensures global reach.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📋</div>
+          <h3>Disclaimer Management</h3>
+          <p>Automatically append custom disclaimers to your messages based on sender configuration. Perfect for compliance and regulatory requirements.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">📞</div>
+          <h3>Call Integration</h3>
+          <p>Seamlessly integrate with telephony systems to trigger SMS notifications on call events and programmatically initiate outbound calls.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">💾</div>
+          <h3>Message Storage</h3>
+          <p>Enable content storage for compliance and analytics. Export your complete message history to Excel format with our convenient export feature.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">🔐</div>
+          <h3>Secure Authentication</h3>
+          <p>Multiple authentication methods including Bearer tokens and Basic auth. Per-number security tokens provide granular access control.</p>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon">⚡</div>
+          <h3>Real-time Webhooks</h3>
+          <p>Receive instant notifications for incoming messages and delivery status updates through configurable webhook endpoints.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Stats Section -->
+  <section class="stats-section">
+    <div class="stats-container">
+      <div class="stat-item">
+        <h3>99.9%</h3>
+        <p>API Uptime</p>
+      </div>
+      <div class="stat-item">
+        <h3>< 1s</h3>
+        <p>Average Response Time</p>
+      </div>
+      <div class="stat-item">
+        <h3>10M+</h3>
+        <p>Messages Delivered</p>
+      </div>
+      <div class="stat-item">
+        <h3>24/7</h3>
+        <p>Technical Support</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- API Documentation Section -->
+  <section class="api-section" id="api-docs">
+    <div class="api-container">
+      <h2 class="section-title">API Documentation</h2>
+      <div id="swagger-ui"></div>
+    </div>
+  </section>
 
   <!-- Footer -->
-  <footer class="footer">
-    <p>&copy; 2025 Aatrox Communication. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+  <footer class="footer" id="support">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h4>About Aatrox</h4>
+        <p>Leading provider of communication solutions for businesses across Australia. Our SMS API powers thousands of applications with reliable message delivery.</p>
+      </div>
+      <div class="footer-section">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#">API Documentation</a></li>
+          <li><a href="#">Getting Started Guide</a></li>
+          <li><a href="#">Code Examples</a></li>
+          <li><a href="#">Pricing</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Support</h4>
+        <ul>
+          <li><a href="#">Contact Support</a></li>
+          <li><a href="#">API Status</a></li>
+          <li><a href="#">Developer Forum</a></li>
+          <li><a href="#">FAQ</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h4>Contact</h4>
+        <ul>
+          <li>Email: api@aatrox.com.au</li>
+          <li>Phone: 1300 AATROX</li>
+          <li>Sydney, Australia</li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2025 Aatrox Communications. All rights reserved. | <a href="#">Privacy Policy</a> | <a href="#">Terms of Service</a></p>
+    </div>
   </footer>
 
   <script src="https://unpkg.com/swagger-ui-dist/swagger-ui-bundle.js"></script>
@@ -436,7 +678,7 @@
         const loading = document.getElementById('loading');
         loading.style.opacity = '0';
         setTimeout(() => loading.style.display = 'none', 500);
-      }, 1000);
+      }, 500);
     });
 
     // Smooth scrolling for navigation
@@ -445,17 +687,19 @@
         e.preventDefault();
         const target = document.querySelector(this.getAttribute('href'));
         if (target) {
-          target.scrollIntoView({
-            behavior: 'smooth',
-            block: 'start'
+          const offset = 80; // Header height
+          const targetPosition = target.offsetTop - offset;
+          window.scrollTo({
+            top: targetPosition,
+            behavior: 'smooth'
           });
         }
       });
     });
 
-    // Initialize Swagger UI with custom theme
+    // Initialize Swagger UI
     const ui = SwaggerUIBundle({
-      url: './openapi.yaml', // Path to the OpenAPI YAML file
+      url: './openapi.yaml',
       dom_id: '#swagger-ui',
       deepLinking: true,
       presets: [
@@ -472,32 +716,17 @@
       filter: true,
       showExtensions: true,
       showCommonExtensions: true,
-      customCss: `
-        .swagger-ui {
-          font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-        }
-        .swagger-ui .info {
-          margin-bottom: 2rem;
-        }
-        .swagger-ui .scheme-container {
-          margin-bottom: 2rem;
-        }
-      `,
+      tryItOutEnabled: true,
       onComplete: function() {
-        // Add custom styling to Swagger UI elements after load
-        const operations = document.querySelectorAll('.opblock');
-        operations.forEach(op => {
-          op.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateX(5px)';
-          });
-          op.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateX(0)';
-          });
-        });
+        // Style Swagger UI components after load
+        const swaggerContainer = document.querySelector('.swagger-ui');
+        if (swaggerContainer) {
+          swaggerContainer.style.fontFamily = '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
+        }
       }
     });
 
-    // Add intersection observer for fade-in animations
+    // Add scroll animations
     const observerOptions = {
       threshold: 0.1,
       rootMargin: '0px 0px -50px 0px'
@@ -508,80 +737,55 @@
         if (entry.isIntersecting) {
           entry.target.style.opacity = '1';
           entry.target.style.transform = 'translateY(0)';
+          observer.unobserve(entry.target);
         }
       });
     }, observerOptions);
 
-    // Observe feature cards
+    // Animate feature cards on scroll
     document.querySelectorAll('.feature-card').forEach((card, index) => {
       card.style.opacity = '0';
-      card.style.transform = 'translateY(20px)';
+      card.style.transform = 'translateY(30px)';
       card.style.transition = `all 0.6s ease ${index * 0.1}s`;
       observer.observe(card);
     });
 
-    // Add parallax effect to background
-    let ticking = false;
-    function updateParallax() {
-      const scrolled = window.pageYOffset;
-      const parallax = document.querySelector('body::before');
-      if (parallax) {
-        const speed = 0.5;
-        const yPos = -(scrolled * speed);
-        document.body.style.setProperty('--parallax-y', `${yPos}px`);
-      }
-      ticking = false;
-    }
-
-    window.addEventListener('scroll', () => {
-      if (!ticking) {
-        window.requestAnimationFrame(updateParallax);
-        ticking = true;
-      }
+    // Animate stat items
+    document.querySelectorAll('.stat-item').forEach((stat, index) => {
+      stat.style.opacity = '0';
+      stat.style.transform = 'translateY(20px)';
+      stat.style.transition = `all 0.6s ease ${index * 0.1}s`;
+      observer.observe(stat);
     });
 
-    // Add copy-to-clipboard functionality for code snippets
-    document.addEventListener('click', function(e) {
-      if (e.target.classList.contains('copy-to-clipboard')) {
-        const code = e.target.parentElement.querySelector('code');
-        if (code) {
-          navigator.clipboard.writeText(code.textContent).then(() => {
-            const originalText = e.target.textContent;
-            e.target.textContent = 'Copied!';
-            setTimeout(() => {
-              e.target.textContent = originalText;
-            }, 2000);
+    // Add active nav link highlighting on scroll
+    const sections = document.querySelectorAll('section[id]');
+    const navLinks = document.querySelectorAll('.nav-link');
+
+    function highlightNavLink() {
+      const scrollY = window.pageYOffset;
+      sections.forEach(section => {
+        const sectionHeight = section.offsetHeight;
+        const sectionTop = section.offsetTop - 100;
+        const sectionId = section.getAttribute('id');
+        
+        if (scrollY > sectionTop && scrollY <= sectionTop + sectionHeight) {
+          navLinks.forEach(link => {
+            link.classList.remove('active');
+            if (link.getAttribute('href') === `#${sectionId}`) {
+              link.classList.add('active');
+            }
           });
         }
-      }
-    });
+      });
+    }
 
-    // Add keyboard navigation
-    document.addEventListener('keydown', function(e) {
-      // Press '/' to focus on search
-      if (e.key === '/' && !e.ctrlKey && !e.metaKey) {
-        e.preventDefault();
-        const searchInput = document.querySelector('.swagger-ui .filter-container input');
-        if (searchInput) {
-          searchInput.focus();
-        }
-      }
-    });
+    window.addEventListener('scroll', highlightNavLink);
 
     // Enhanced error handling
     window.addEventListener('unhandledrejection', event => {
       console.error('Unhandled promise rejection:', event.reason);
     });
-
-    // Performance monitoring
-    if ('PerformanceObserver' in window) {
-      const perfObserver = new PerformanceObserver((list) => {
-        for (const entry of list.getEntries()) {
-          console.log(`${entry.name}: ${entry.duration.toFixed(2)}ms`);
-        }
-      });
-      perfObserver.observe({ entryTypes: ['measure'] });
-    }
   </script>
 </body>
 </html>
