@@ -131,7 +131,6 @@ paths:
         '500':
           description: An unexpected error occurred on our end.
 
- 
   /api/v2/sms/send/bulk:
     post:
       summary: Send Bulk SMS
@@ -200,6 +199,76 @@ paths:
           description: Your authentication failed. Please check your credentials.
         '500':
           description: An error occurred on our server.
+
+  /api/v2/sms/send/Email:
+    post:
+      summary: Configure SMS to Email
+      description: >
+        Configure SMS-to-email forwarding for an inbound number. When enabled, any SMS received on the specified number via `/api/v2/sms/receive`
+        will also be sent as an email using SMTP2GO. The email subject is formatted as `{sender number} - SMS to Email`, and the body includes
+        the sender, recipient, timestamps, and message content.
+      tags:
+        - SMS to Email
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                TO:
+                  type: string
+                  format: email
+                  description: >
+                    Email address that inbound SMS messages should be forwarded to. Required when enabling SMS-to-email.
+                Number:
+                  type: string
+                  description: >
+                    The inbound phone number to attach this rule to. May be provided with or without a leading '+'.
+                enabled:
+                  type: boolean
+                  description: >
+                    Whether SMS-to-email forwarding is enabled for this number.
+                    Defaults to true if omitted. If set to false or if TO is empty/null,
+                    any existing SMS-to-email configuration for this number will be disabled/removed.
+              required:
+                - Number
+      responses:
+        '200':
+          description: SMS-to-email configuration updated successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    description: Status of the operation.
+                  message:
+                    type: string
+                    description: Human-readable description of the result.
+                  data:
+                    type: object
+                    nullable: true
+                    description: >
+                      The active configuration when SMS-to-email is enabled.
+                      Null when the rule has been disabled/removed.
+                    properties:
+                      to:
+                        type: string
+                        format: email
+                        description: Destination email address for forwarded SMS.
+                      enabled:
+                        type: boolean
+                        description: Whether SMS-to-email is enabled for this number.
+        '400':
+          description: Invalid request payload (e.g. missing Number field).
+        '401':
+          description: Authentication failed or bearer token does not match the configured number.
+        '500':
+          description: An error occurred while updating SMS-to-email configuration.
 
   /api/v2/sms/send/Enablecontent:
     post:
@@ -338,6 +407,8 @@ paths:
       summary: Receive SMS Webhook
       description: >
         Webhook endpoint for receiving incoming SMS messages. The system will forward the message to the configured webhook URL for the recipient number.
+        If SMS-to-email has been enabled for the destination number using `/api/v2/sms/send/Email`, the same inbound SMS will also be forwarded via email
+        (subject: `{sender number} - SMS to Email`) using SMTP2GO.
       tags:
         - SMS
       parameters:
@@ -373,7 +444,7 @@ paths:
           description: Message encoding (0 for GSM-7, default is 0).
       responses:
         '200':
-          description: Message successfully forwarded to webhook.
+          description: Message successfully forwarded to webhook (and email if configured).
         '400':
           description: Missing required parameters.
         '404':
