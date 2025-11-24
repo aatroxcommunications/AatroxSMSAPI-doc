@@ -205,8 +205,8 @@ paths:
       summary: Configure SMS to Email
       description: >
         Configure SMS-to-email forwarding for an inbound number. When enabled, any SMS received on the specified number via `/api/v2/sms/receive`
-        will also be sent as an email using SMTP2GO. The email subject is formatted as `{sender number} - SMS to Email`, and the body includes
-        the sender, recipient, timestamps, and message content.
+        will also be sent as an email. The email subject is formatted as `{sender number} - SMS to Email`, and the body includes
+        the sender, recipient, timestamps, and message content. To disable, use the same endpoint but change the the following body to false ' "enabled": False '
       tags:
         - SMS to Email
       security:
@@ -549,3 +549,4 @@ paths:
           description: You are not authorized to access this information.
         '500':
           description: An error occurred while retrieving your message history.
+
